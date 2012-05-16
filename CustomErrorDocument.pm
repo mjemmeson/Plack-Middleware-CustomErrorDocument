@@ -23,7 +23,7 @@ sub call {
                 return;
             }
 
-            my $path = $self->{ $r->[0] }->($env);
+            my $path = $self->{ $r->[0] }->($env) or return;
 
             my $h = Plack::Util::headers( $r->[1] );
             $h->remove('Content-Length');
