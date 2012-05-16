@@ -1,6 +1,6 @@
 # basic.t
 
-use Test::Most;
+use Test::More;
 
 use Plack::Test;
 use Plack::Middleware::ErrorDocument;
@@ -28,12 +28,12 @@ $app = Plack::Middleware::CustomErrorDocument->wrap(
         return 't/root/error_404.jpg'    #
             if $env->{PATH_INFO} =~ qr/\.jpe?g$/;
         return "t/root/error_404_$1.html"
-            if $env->{PATH_INFO} =~ qr/(special)/; # example of using match
-        return 't/root/error_404.html';    # default
+            if $env->{PATH_INFO} =~ qr/(special)/;  # example of using capture
+        return 't/root/error_404.html';             # default
     },
 );
 
-$app = Plack::Middleware::ErrorDocument->wrap(    #
+$app = Plack::Middleware::ErrorDocument->wrap(      #
     $app,
     500 => 't/root/error_500.html',
 );
@@ -79,7 +79,6 @@ my @tests = (
         content_like =>
             qr{<html><body><h1>Page not found :\(</h1></body></html>},
     },
-
 );
 
 foreach my $test (@tests) {
