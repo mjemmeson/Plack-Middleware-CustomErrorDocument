@@ -2,4 +2,7 @@ Revision history for Plack-Middleware-CustomErrorDocument
 
 {{$NEXT}}
 
+ - Matches behaviour of Plack::Middleware::ErrorDocument for non-dynamic error page selection
+ - Fixes recursive dependency bug
+
 0.002     2012-06-15 17:44:04 Europe/London
