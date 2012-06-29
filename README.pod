@@ -21,7 +21,7 @@ version 0.003
             return $path;
         },
         # use static path
-        500 => sub { 'path/to/error/doc' },
+        500 => 'path/to/error/doc',
     );
 
     # or with Plack::Builder:
@@ -32,6 +32,18 @@ version 0.003
         };
         $app;
     };
+
+    # subrequests are possible as with Plack::Middleware::ErrorDocument
+    # (but untested!)
+    $app = Plack::Middleware::CustomErrorDocument->wrap(
+        $app,
+        404 => sub {
+            my $env = shift;
+            ...
+            return $path;
+        },
+        subrequest => 1,
+    );
 
 =head1 DESCRIPTION
 
@@ -51,6 +63,25 @@ result in a 404 status (and a standard 404 HTML page for all others).
 L<Plack::Middleware::ErrorDocument>
 
 =back
+
+=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
+
+=head1 SUPPORT
+
+=head2 Bugs / Feature Requests
+
+Please report any bugs or feature requests through the issue tracker
+at L<http://rt.cpan.org/Public/Dist/Display.html?Name=Plack-Middleware-CustomErrorDocument>.
+You will be notified automatically of any progress on your issue.
+
+=head2 Source Code
+
+This is open source software.  The code repository is available for
+public review and contribution under the terms of the license.
+
+L<https://github.com/mjemmeson/Plack-Middleware-CustomErrorDocument>
+
+  git clone https://github.com/mjemmeson/Plack-Middleware-CustomErrorDocument.git
 
 =head1 AUTHOR
 

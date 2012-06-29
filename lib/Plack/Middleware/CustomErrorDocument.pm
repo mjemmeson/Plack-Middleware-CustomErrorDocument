@@ -2,10 +2,14 @@ package Plack::Middleware::CustomErrorDocument;
 
 # ABSTRACT: dynamically select error documents based on HTTP status code
 
+# VERSION
+
 use strict;
 use warnings;
 use parent qw(Plack::Middleware);
 use Plack::MIME;
+use Plack::Util;
+use Plack::Util::Accessor qw( subrequest );
 
 use HTTP::Status qw(is_error);
 
