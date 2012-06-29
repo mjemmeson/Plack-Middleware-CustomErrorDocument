@@ -111,8 +111,8 @@ __END__
         $app;
     };
 
-    # subrequests are possible as with Plack::Middleware::ErrorDocument
-    # (but untested!)
+    # subrequests are possible, as with Plack::Middleware::ErrorDocument
+    # (but untested and unrecommended)
     $app = Plack::Middleware::CustomErrorDocument->wrap(
         $app,
         404 => sub {
