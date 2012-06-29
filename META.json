@@ -65,8 +65,7 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "mailto" : "bug-plack-middleware-customerrordocument at rt.cpan.org",
-         "web" : "http://rt.cpan.org/Public/Dist/Display.html?Name=Plack-Middleware-CustomErrorDocument"
+         "web" : "https://github.com/mjemmeson/Plack-Middleware-CustomErrorDocument/issues"
       },
       "homepage" : "https://github.com/mjemmeson/Plack-Middleware-CustomErrorDocument",
       "repository" : {
