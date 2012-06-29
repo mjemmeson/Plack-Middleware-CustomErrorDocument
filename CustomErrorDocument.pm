@@ -23,25 +23,56 @@ sub call {
                 return;
             }
 
-            my $path = $self->{ $r->[0] }->($env) or return;
+            my $path
+                = ref $self->{ $r->[0] }
+                ? $self->{ $r->[0] }->($env)
+                : $self->{ $r->[0] };
 
-            my $h = Plack::Util::headers( $r->[1] );
-            $h->remove('Content-Length');
+            return unless $path;
 
-            $h->set( 'Content-Type', Plack::MIME->mime_type($path) );
-
-            open my $fh, "<", $path or die "$path: $!";
-            if ( $r->[2] ) {
-                $r->[2] = $fh;
-            } else {
-                my $done;
-                return sub {
-                    unless ($done) {
-                        return join '', <$fh>;
+            if ( $self->subrequest ) {
+                for my $key ( keys %$env ) {
+                    unless ( $key =~ /^psgi/ ) {
+                        $env->{ 'psgix.errordocument.' . $key }
+                            = $env->{$key};
                     }
-                    $done = 1;
-                    return defined $_[0] ? '' : undef;
-                };
+                }
+
+                # TODO: What if SCRIPT_NAME is not empty?
+                $env->{REQUEST_METHOD} = 'GET';
+                $env->{REQUEST_URI}    = $path;
+                $env->{PATH_INFO}      = $path;
+                $env->{QUERY_STRING}   = '';
+                delete $env->{CONTENT_LENGTH};
+
+                my $sub_r = $self->app->($env);
+                if ( $sub_r->[0] == 200 ) {
+                    $r->[1] = $sub_r->[1];
+                    $r->[2] = $sub_r->[2];
+                }
+
+                # TODO: allow 302 here?
+
+            } else {
+
+                my $h = Plack::Util::headers( $r->[1] );
+                $h->remove('Content-Length');
+
+                $h->set( 'Content-Type', Plack::MIME->mime_type($path) );
+
+                open my $fh, "<", $path or die "$path: $!";
+                if ( $r->[2] ) {
+                    $r->[2] = $fh;
+                } else {
+                    my $done;
+                    return sub {
+                        unless ($done) {
+                            return join '', <$fh>;
+                        }
+                        $done = 1;
+                        return defined $_[0] ? '' : undef;
+                    };
+                }
             }
         }
     );
@@ -64,7 +95,7 @@ __END__
             return $path;
         },
         # use static path
-        500 => sub { 'path/to/error/doc' },
+        500 => 'path/to/error/doc',
     );
 
     # or with Plack::Builder:
@@ -75,6 +106,19 @@ __END__
         };
         $app;
     };
+
+    # subrequests are possible as with Plack::Middleware::ErrorDocument
+    # (but untested!)
+    $app = Plack::Middleware::CustomErrorDocument->wrap(
+        $app,
+        404 => sub {
+            my $env = shift;
+            ...
+            return $path;
+        },
+        subrequest => 1,
+    );
+    
 
     
 =head1 DESCRIPTION

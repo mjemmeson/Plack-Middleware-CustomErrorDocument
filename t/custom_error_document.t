@@ -1,7 +1,8 @@
-# basic.t
+# custom_error_document.t
 
 use Test::More;
 
+use FindBin;
 use Plack::Test;
 use Plack::Middleware::ErrorDocument;
 use Plack::Middleware::CustomErrorDocument;
@@ -25,11 +26,11 @@ $app = Plack::Middleware::CustomErrorDocument->wrap(
     $app,
     404 => sub {
         my $env = shift;
-        return 't/root/error_404.jpg'    #
+        return "$FindBin::Bin/root/error_404.jpg"    #
             if $env->{PATH_INFO} =~ qr/\.jpe?g$/;
-        return "t/root/error_404_$1.html"
+        return "$FindBin::Bin/root/error_404_$1.html"
             if $env->{PATH_INFO} =~ qr/(special)/;  # example of using capture
-        return 't/root/error_404.html';             # default
+        return "$FindBin::Bin/root/error_404.html"; # default
     },
 );
 
