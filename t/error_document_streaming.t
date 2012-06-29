@@ -9,7 +9,7 @@ use Plack::Test;
 use Plack::Builder;
  
 my $handler = builder {
-    enable "Plack::Middleware::ErrorDocument",
+    enable "Plack::Middleware::CustomErrorDocument",
         404 => "$FindBin::Bin/errors/404.html";
  
     sub {

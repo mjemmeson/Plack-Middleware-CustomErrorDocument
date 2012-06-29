@@ -9,9 +9,9 @@ use Plack::Test;
 use Plack::Builder;
  
 my $handler = builder {
-    enable "Plack::Middleware::ErrorDocument",
+    enable "Plack::Middleware::CustomErrorDocument",
         500 => "$FindBin::Bin/errors/500.html";
-    enable "Plack::Middleware::ErrorDocument",
+    enable "Plack::Middleware::CustomErrorDocument",
         404 => "/errors/404.html", subrequest => 1;
     enable "Plack::Middleware::Static",
         path => qr{^/errors}, root => $FindBin::Bin;

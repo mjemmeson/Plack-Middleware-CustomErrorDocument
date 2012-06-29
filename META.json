@@ -59,7 +59,7 @@
    "provides" : {
       "Plack::Middleware::CustomErrorDocument" : {
          "file" : "lib/Plack/Middleware/CustomErrorDocument.pm",
-         "version" : "0.003"
+         "version" : "0.004"
       }
    },
    "release_status" : "stable",
@@ -74,6 +74,6 @@
          "web" : "https://github.com/mjemmeson/Plack-Middleware-CustomErrorDocument"
       }
    },
-   "version" : "0.003"
+   "version" : "0.004"
 }
 
